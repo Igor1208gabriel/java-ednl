@@ -20,12 +20,12 @@ public class teste {
     }
     
     public static void main(String[] args) throws NumberFormatException, IOException {
-        ArvoreBinariaPesquisa abp = new ArvoreBinariaPesquisa();
+        //ArvoreBinariaPesquisa abp = new ArvoreBinariaPesquisa();
         ArvoreAVL avl = new ArvoreAVL();
         ArrayList<Integer> lista = leitura_arquivo("Entrada.txt");
         
-        //abp.plantarVarios(lista);
         avl.plantarVarios(lista);
+        //abp.plantarVarios(lista);
         //System.out.println("Árvore Binária de pesquisa");
         //abp.imprimirArvore();
         //System.out.println("\nÁrvore AVL");
