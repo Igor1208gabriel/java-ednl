@@ -22,7 +22,7 @@ public class ArvoreAVL {
 
     void rotacionar(no atual){
         if (atual == null) {
-            System.out.println("Rotacionar: Nó atual é null.");
+            System.out.println("Nó atual é null.");
             return;
         }
 
@@ -30,15 +30,16 @@ public class ArvoreAVL {
         if(atual.getesq() != null) esquerda = atual.getesq().getfab();
         if(atual.getdir() != null) direita  = atual.getdir().getfab();
 
-        System.out.println("Rotacionar: Nó " + atual.getval() + " com fator balanceamento = " + atual.getfab());
+        System.out.println("Nó " + atual.getval() + " com fab = " + atual.getfab());
 
         if(atual.getfab() >= 2){
-            if(esquerda >= 0) rotacaoDireita(atual.getesq());
+            if(esquerda >= 0) rotacaoDireita(atual);
             if(esquerda <  0) rotacaoDireitaDupla(atual);
         } else if (atual.getfab() <= -2) {
-            if(direita <= 0) rotacaoEsquerda(atual.getdir());
+            if(direita <= 0) rotacaoEsquerda(atual);
             if(direita >  0) rotacaoEsquerdaDupla(atual);
         }
+        
         if(atual.getpai() != null) rotacionar(atual.getpai());
     }  
 
@@ -52,6 +53,7 @@ public class ArvoreAVL {
         if(eFilhoDireito (atual)) pai.setfab(fab-1);
         
         if(pai.getfab() == 0) return;
+        if(pai.getfab() > 1 || pai.getfab() > 1) rotacionar(atual);
         rebalancear(pai);
     }
 
@@ -282,25 +284,24 @@ public class ArvoreAVL {
 
 
 
-    void rotacaoEsquerda(no rodar){
-        no esq, pai, avo;
+    void rotacaoEsquerda(no pai){
+        no esq, rodar, avo;
+        rodar = pai.getdir();
         esq = rodar.getesq();
-        pai = rodar.getpai();
         avo = pai.getpai();
-        boolean fes = eFilhoEsquerdo(pai);
 
-        System.out.println("Rotação esquerda no nó " + rodar.getval());
+        System.out.println("Rotação esquerda no nó " + pai.getval());
         imprimirArvore();
 
-
+        rodar.setesq(pai);
         pai.setpai(rodar);
         pai.setdir(esq);
         if(esq != null) esq.setpai(pai);
-        rodar.setesq(pai);
         rodar.setpai(avo);
+
         if(avo != null) {
-            if( fes) avo.setesq(rodar);
-            if(!fes) avo.setdir(rodar);
+            if(eFilhoEsquerdo(pai)) avo.setesq(rodar);
+            if(eFilhoDireito (pai)) avo.setdir(rodar);
         } else {
             this.raiz = rodar;
         }
@@ -310,31 +311,31 @@ public class ArvoreAVL {
 
     }
 
-    void rotacaoDireita(no rodar){
-        no dir, pai, avo;
+    void rotacaoDireita(no pai){
+        no dir, rodar, avo;
+        rodar = pai.getesq();
         dir = rodar.getdir();
-        pai = rodar.getpai();
         avo = pai.getpai();
-        boolean fes = eFilhoDireito(pai);
 
         System.out.println("Rotação direita no nó " + rodar.getval());
         imprimirArvore();
 
 
-        pai.setpai(rodar);
-        pai.setdir(dir);
-        if(dir != null) dir.setpai(pai);
         rodar.setdir(pai);
+        pai.setpai(rodar);
+        pai.setesq(dir);
+        if(dir != null) dir.setpai(pai);
+        
         rodar.setpai(avo);
         if(avo != null) {
-            if( fes) avo.setdir(rodar);
-            if(!fes) avo.setdir(rodar);
+            if(eFilhoEsquerdo(avo)) avo.setesq(rodar);
+            if(eFilhoDireito(avo))  avo.setdir(rodar);
         } else {
             this.raiz = rodar;
         }
         //if(dir != null) rebalancear(dir);
         //if(dir == null) rebalancear(pai);
-        fatorBalanceamentoColeguinha(rodar, pai, 1);
+        fatorBalanceamentoColeguinha(rodar, pai, -1);
     }
 
     void rotacaoDireitaDupla(no rodar){
